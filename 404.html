@@ -25,7 +25,13 @@
     --ultra: #ffd27a;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
   body {
     min-height: 100dvh;
     font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
@@ -36,11 +42,16 @@
       radial-gradient(700px 400px at 50% 110%, rgba(125,255,179,.08), transparent 55%),
       var(--bg);
     line-height: 1.45;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .wrap {
-    width: min(720px, 100% - 2rem);
+    width: 100%;
+    max-width: 720px;
     margin: 0 auto;
-    padding: 2.2rem 0 3.5rem;
+    padding: 2.2rem 1rem 3.5rem;
+    box-sizing: border-box;
   }
   header {
     text-align: center;
@@ -90,6 +101,8 @@
   .grid {
     display: grid;
     gap: 1rem;
+    width: 100%;
+    min-width: 0;
   }
   .card {
     background: linear-gradient(180deg, rgba(255,255,255,.03), transparent 40%), var(--card);
@@ -97,6 +110,9 @@
     border-radius: 18px;
     padding: 1.15rem 1.2rem 1.25rem;
     box-shadow: 0 0 0 1px rgba(255,255,255,.02), 0 12px 40px rgba(0,0,0,.25);
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
   }
   .card h2 {
     margin: 0 0 .35rem;
@@ -236,6 +252,7 @@
     border: 1px solid var(--line);
     position: relative;
     overflow: hidden;
+    max-width: 100%;
   }
   .loot-stage.shake { animation: lootshake .45s ease; }
   @keyframes lootshake {
@@ -338,12 +355,13 @@
   .ticker-wrap {
     margin-top: .75rem;
     overflow: hidden;
+    max-width: 100%;
     border-radius: 10px;
     border: 1px solid var(--line);
     background: #0d0d18;
   }
   .ticker {
-    display: flex;
+    display: inline-flex;
     gap: 2rem;
     white-space: nowrap;
     padding: .55rem 0;
@@ -351,6 +369,7 @@
     color: var(--ok);
     animation: tick 22s linear infinite;
     width: max-content;
+    max-width: none;
   }
   @keyframes tick {
     from { transform: translateX(0); }
@@ -411,13 +430,14 @@
   /* 涂鸦墙 */
   .marquee-wrap {
     overflow: hidden;
+    max-width: 100%;
     border-radius: 10px;
     border: 1px solid var(--line);
     background: #0d0d18;
     margin-bottom: .85rem;
   }
   .marquee {
-    display: flex;
+    display: inline-flex;
     gap: 2.2rem;
     white-space: nowrap;
     padding: .55rem 0;
@@ -425,6 +445,7 @@
     color: var(--muted);
     animation: tick 28s linear infinite;
     width: max-content;
+    max-width: none;
   }
   .marquee span::before {
     content: "✦ ";
