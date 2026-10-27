@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a12" />
+<meta name="description" content="teny.cc · Teny 的怪奇实验 — 今日运势、随机骚话、怪奇按钮" />
+<title>teny.cc · 怪奇实验</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧪%3C/text%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #0a0a12;
+    --bg2: #12121f;
+    --card: #161625;
+    --line: #2a2a45;
+    --text: #e8e6f2;
+    --muted: #9a96b0;
+    --accent: #b8a4ff;
+    --accent2: #ff7ab8;
+    --glow: rgba(184, 164, 255, 0.35);
+    --ok: #7dffb3;
+    --warn: #ffd27a;
+    --bad: #ff7a7a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100dvh;
+    font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(184,164,255,.18), transparent 55%),
+      radial-gradient(900px 500px at 110% 10%, rgba(255,122,184,.12), transparent 50%),
+      radial-gradient(700px 400px at 50% 110%, rgba(125,255,179,.08), transparent 55%),
+      var(--bg);
+    line-height: 1.45;
+  }
+  .wrap {
+    width: min(720px, 100% - 2rem);
+    margin: 0 auto;
+    padding: 2.2rem 0 3.5rem;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .28rem .7rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(22,22,37,.7);
+    color: var(--accent);
+    font-size: .78rem;
+    letter-spacing: .04em;
+  }
+  h1 {
+    margin: .85rem 0 .35rem;
+    font-size: clamp(1.7rem, 5vw, 2.35rem);
+    font-weight: 750;
+    letter-spacing: -.02em;
+  }
+  h1 span { color: var(--accent2); }
+  .sub {
+    color: var(--muted);
+    font-size: .95rem;
+    margin: 0;
+  }
+  .grid {
+    display: grid;
+    gap: 1rem;
+  }
+  .card {
+    background: linear-gradient(180deg, rgba(255,255,255,.03), transparent 40%), var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 1.15rem 1.2rem 1.25rem;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.02), 0 12px 40px rgba(0,0,0,.25);
+  }
+  .card h2 {
+    margin: 0 0 .35rem;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+  }
+  .card .hint {
+    margin: 0 0 .9rem;
+    color: var(--muted);
+    font-size: .82rem;
+  }
+  button.toy {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 12px;
+    padding: .85rem 1rem;
+    font-size: 1rem;
+    font-weight: 650;
+    color: #0a0a12;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 8px 28px var(--glow);
+    transition: transform .12s ease, filter .12s ease;
+  }
+  button.toy:hover { filter: brightness(1.06); }
+  button.toy:active { transform: translateY(1px) scale(.99); }
+  button.toy.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--line);
+    box-shadow: none;
+    margin-top: .55rem;
+  }
+  .result {
+    margin-top: .95rem;
+    min-height: 3.2rem;
+    padding: .9rem 1rem;
+    border-radius: 12px;
+    background: var(--bg2);
+    border: 1px dashed var(--line);
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: .95rem;
+  }
+  .result.empty { color: var(--muted); border-style: solid; }
+  .result .title {
+    display: block;
+    font-weight: 700;
+    margin-bottom: .25rem;
+    color: var(--accent);
+  }
+  .stars {
+    letter-spacing: .08em;
+    color: var(--warn);
+    margin: .15rem 0 .35rem;
+  }
+  .meta {
+    margin-top: .55rem;
+    font-size: .75rem;
+    color: var(--muted);
+  }
+  footer {
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: .82rem;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    margin: 0 .45rem;
+  }
+  footer a:hover { text-decoration: underline; }
+  .dot { opacity: .45; }
+  @media (prefers-reduced-motion: reduce) {
+    button.toy { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">🧪 LAB · teny.cc</div>
+      <h1>怪奇<span>实验</span></h1>
+      <p class="sub">点一下，宇宙随便回你一句。Teny 的小型混沌机。</p>
+    </header>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="fortune-title">
+        <h2 id="fortune-title">✨ 今日运势</h2>
+        <p class="hint">按日期种子，同一天结果稳定；换个日子再来。</p>
+        <button class="toy" type="button" id="btn-fortune">抽取今日运势</button>
+        <div class="result empty" id="out-fortune" role="status">还没抽。胆大一点。</div>
+      </section>
+
+      <section class="card" aria-labelledby="line-title">
+        <h2 id="line-title">💬 随机骚话</h2>
+        <p class="hint">短、损、有点用。适合发群里当气氛组。</p>
+        <button class="toy" type="button" id="btn-line">来一句</button>
+        <button class="toy secondary" type="button" id="btn-copy" hidden>复制到剪贴板</button>
+        <div class="result empty" id="out-line" role="status">等你点。</div>
+      </section>
+
+      <section class="card" aria-labelledby="weird-title">
+        <h2 id="weird-title">🔮 怪奇按钮</h2>
+        <p class="hint">不知道会发生什么——这就是卖点。</p>
+        <button class="toy" type="button" id="btn-weird">按下去（后果自负）</button>
+        <div class="result empty" id="out-weird" role="status">按钮在看着你。</div>
+      </section>
+    </div>
+
+    <footer>
+      <div>
+        <a href="https://x.com/teny_cc" rel="noopener" target="_blank">X @teny_cc</a>
+        <span class="dot">·</span>
+        <a href="https://t.me/teny_cc" rel="noopener" target="_blank">Telegram @teny_cc</a>
+        <span class="dot">·</span>
+        <a href="https://xxyy.cc" rel="noopener" target="_blank">xxyy.cc</a>
+      </div>
+      <p style="margin:.7rem 0 0">Made for fun by Teny · static · no trackers</p>
+    </footer>
+  </div>
+
+<script>
+(function () {
+  const FORTUNES = [
+    { t: "大吉·偏门", d: "今天适合做一件没人理解的小事。别解释，直接干。", s: 5 },
+    { t: "中吉·迟钝", d: "信号延迟中。先喝水，再做决定。急也没用。", s: 3 },
+    { t: "小吉·嘴炮", d: "你今天说话会意外有用。少说一句，多留一点神秘感。", s: 4 },
+    { t: "平·观察者模式", d: "别当主角。当旁白。今天的好运在别人故事里。", s: 3 },
+    { t: "小凶·Wi‑Fi 情绪", d: "信号满格，心情断线。少刷盘，多走路。", s: 2 },
+    { t: "怪吉·反向操作", d: "你想做的反面，可能才是正解。至少试一次。", s: 4 },
+    { t: "大吉·隐形 Buff", d: "没人看见，但你今天很强。低调发财。", s: 5 },
+    { t: "中平·加载中", d: "宇宙还在转圈。别刷新命运，先刷新页面以外的生活。", s: 3 },
+    { t: "吉·贵人迟到", d: "贵人今天会迟到，但会到。你只要别先走。", s: 4 },
+    { t: "凶转吉·翻盘窗", d: "上午别赌气，下午有窗口。抓住就够。", s: 3 },
+    { t: "奇吉·错位好运", d: "你会在错误的地方找到正确的东西。保持迷路。", s: 4 },
+    { t: "平淡·省电模式", d: "今天不是高光日。充电、整理、少承诺。", s: 2 }
+  ];
+
+  const LINES = [
+    "我不是摆烂，我是在进行长期主义的休眠。",
+    "朋友，你的计划很完美，唯一的问题是你得执行。",
+    "行情不会因为你盯盘而心软。",
+    "少一点“我觉得”，多一点“我查过”。",
+    "今天的我，拒绝内耗，只接受外卷别人。",
+    "不是我懒，是效率在隐身。",
+    "你要的不是建议，你要的是有人说“可以冲”。我偏说：先睡。",
+    "钱包空了没关系，梗还在。",
+    "别把焦虑当生产力。它很吵，但不干活。",
+    "我支持你做梦，也支持你设个闹钟。",
+    "市场是随机的，但你的 FOMO 很稳定。",
+    "先把自己修好，再去修别人的世界观。",
+    "有些关系像空气：看不见，但一离开就知道。",
+    "你不是方向感差，你是诱惑太多。",
+    "请允许我用沉默完成今天的社交配额。",
+    "赢一次别上瘾，输一次别立人设。",
+    "我可以很真诚，也可以很忙。二选一。",
+    "运气是概率，态度是可控变量。",
+    "别问值不值，问你能不能承担后悔。",
+    "今天适合：喝水、闭嘴、赚钱（顺序可调）。"
+  ];
+
+  const WEIRD = [
+    { t: "传送失败", d: "坐标偏移 0.3 毫米。你还在原地，但世界微微歪了一点。" },
+    { t: "检测到平行宇宙干扰", d: "隔壁宇宙的你刚点了取消。你坚持了。好。" },
+    { t: "按钮饿了", d: "它要你再按一次。不要惯着它……或者惯一下也行。" },
+    { t: "随机祝福已发放", d: "你获得：【不被群消息艾特】护盾 ×1（今日有效）。" },
+    { t: "警告：因果过载", d: "你刚才那一下，让一只鸽子改了飞行路线。后果未知。" },
+    { t: "实验记录 #404", d: "样本：人类。反应：好奇。结论：继续点。" },
+    { t: "神秘兑换码", d: "TENY-OK-OK — 不可兑换任何东西，但很好看。" },
+    { t: "空间折叠完成", d: "你与「下一杯好喝的东西」之间的距离缩短了 12%。" },
+    { t: "怪奇协议握手成功", d: "握手方：空气。状态：友好。建议：微笑一下。" },
+    { t: "时间胶囊弹出", d: "来自未来的你留言：「别删这段。你会用到。」" },
+    { t: "概率雨", d: "今日掉落：小确幸 ×2、离谱巧合 ×1、免费咖啡概率 +3%。" },
+    { t: "系统提示", d: "你已解锁隐藏结局：普通且快乐。稀有度：SSR。" }
+  ];
+
+  function mulberry32(a) {
+    return function () {
+      let t = (a += 0x6d2b79f5);
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function daySeed() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+    return y * 10000 + m * 100 + day;
+  }
+
+  function stars(n) {
+    return "★".repeat(n) + "☆".repeat(Math.max(0, 5 - n));
+  }
+
+  function pick(arr, rnd) {
+    return arr[Math.floor(rnd() * arr.length)];
+  }
+
+  const outFortune = document.getElementById("out-fortune");
+  const outLine = document.getElementById("out-line");
+  const outWeird = document.getElementById("out-weird");
+  const btnCopy = document.getElementById("btn-copy");
+  let lastLine = "";
+
+  document.getElementById("btn-fortune").addEventListener("click", () => {
+    const rnd = mulberry32(daySeed() ^ 0x54454e59); // TENY
+    const f = pick(FORTUNES, rnd);
+    const lucky = ["紫", "青", "银", "墨", "霓虹粉", "幽灵白"][Math.floor(rnd() * 6)];
+    const num = 1 + Math.floor(rnd() * 88);
+    outFortune.classList.remove("empty");
+    outFortune.innerHTML =
+      '<span class="title">' + f.t + "</span>" +
+      '<div class="stars" aria-label="星级">' + stars(f.s) + "</div>" +
+      f.d +
+      '<div class="meta">幸运色 · ' + lucky + "　·　今日数字 · " + num + "</div>";
+  });
+
+  document.getElementById("btn-line").addEventListener("click", () => {
+    const rnd = mulberry32((Date.now() ^ (Math.random() * 1e9)) >>> 0);
+    lastLine = pick(LINES, rnd);
+    outLine.classList.remove("empty");
+    outLine.textContent = lastLine;
+    btnCopy.hidden = false;
+  });
+
+  btnCopy.addEventListener("click", async () => {
+    if (!lastLine) return;
+    try {
+      await navigator.clipboard.writeText(lastLine);
+      btnCopy.textContent = "已复制 ✓";
+      setTimeout(() => { btnCopy.textContent = "复制到剪贴板"; }, 1200);
+    } catch (_) {
+      btnCopy.textContent = "复制失败，长按选中文字";
+      setTimeout(() => { btnCopy.textContent = "复制到剪贴板"; }, 1600);
+    }
+  });
+
+  document.getElementById("btn-weird").addEventListener("click", () => {
+    const rnd = mulberry32((performance.now() * 1000 ^ Date.now()) >>> 0);
+    const w = pick(WEIRD, rnd);
+    outWeird.classList.remove("empty");
+    outWeird.innerHTML = '<span class="title">' + w.t + "</span>" + w.d;
+  });
+})();
+</script>
+</body>
+</html>
