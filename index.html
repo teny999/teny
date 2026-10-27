@@ -24,15 +24,20 @@
     --rare: #7ec8ff;
     --ultra: #ffd27a;
   }
-  * { box-sizing: border-box; }
-  html, body {
+  *, *::before, *::after { box-sizing: border-box; }
+  html {
     margin: 0;
     padding: 0;
     width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
+    max-width: 100vw;
+    overflow-x: clip;
   }
   body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: clip;
     min-height: 100dvh;
     font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
     color: var(--text);
@@ -48,10 +53,11 @@
   }
   .wrap {
     width: 100%;
-    max-width: 720px;
+    max-width: min(720px, 100%);
     margin: 0 auto;
     padding: 2.2rem 1rem 3.5rem;
     box-sizing: border-box;
+    overflow-x: clip;
   }
   header {
     text-align: center;
@@ -87,8 +93,13 @@
     gap: .4rem;
     justify-content: center;
     margin-top: 1rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
   }
   .nav-jump a {
+    flex: 0 1 auto;
+    white-space: nowrap;
     font-size: .72rem;
     color: var(--muted);
     text-decoration: none;
@@ -110,6 +121,8 @@
     border-radius: 18px;
     padding: 1.15rem 1.2rem 1.25rem;
     box-shadow: 0 0 0 1px rgba(255,255,255,.02), 0 12px 40px rgba(0,0,0,.25);
+    box-sizing: border-box;
+    width: 100%;
     min-width: 0;
     max-width: 100%;
     overflow: hidden;
@@ -352,26 +365,49 @@
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     transition: width .4s ease;
   }
-  .ticker-wrap {
-    margin-top: .75rem;
-    overflow: hidden;
+  .ticker-wrap,
+  .marquee-wrap {
+    position: relative;
+    width: 100%;
     max-width: 100%;
+    overflow: hidden;
     border-radius: 10px;
     border: 1px solid var(--line);
     background: #0d0d18;
+    height: 2.35rem;
   }
-  .ticker {
-    display: inline-flex;
+  .ticker-wrap { margin-top: .75rem; }
+  .marquee-wrap { margin-bottom: .85rem; }
+  /* absolute track: never expands document scrollWidth */
+  .scroll-track {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    will-change: transform;
+    pointer-events: none;
+  }
+  .scroll-track.tick-fast { animation: tick-x 22s linear infinite; }
+  .scroll-track.tick-slow { animation: tick-x 28s linear infinite; }
+  .scroll-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
     gap: 2rem;
+    padding: 0 1rem;
     white-space: nowrap;
-    padding: .55rem 0;
     font-size: .78rem;
-    color: var(--ok);
-    animation: tick 22s linear infinite;
-    width: max-content;
-    max-width: none;
   }
-  @keyframes tick {
+  .ticker-wrap .scroll-group { color: var(--ok); gap: 2rem; }
+  .marquee-wrap .scroll-group { color: var(--muted); gap: 2.2rem; }
+  .marquee-wrap .scroll-group span::before {
+    content: "✦ ";
+    color: var(--accent2);
+  }
+  @keyframes tick-x {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
@@ -428,29 +464,6 @@
   .coin.yin { color: var(--accent); border-color: rgba(184,164,255,.45); }
 
   /* 涂鸦墙 */
-  .marquee-wrap {
-    overflow: hidden;
-    max-width: 100%;
-    border-radius: 10px;
-    border: 1px solid var(--line);
-    background: #0d0d18;
-    margin-bottom: .85rem;
-  }
-  .marquee {
-    display: inline-flex;
-    gap: 2.2rem;
-    white-space: nowrap;
-    padding: .55rem 0;
-    font-size: .78rem;
-    color: var(--muted);
-    animation: tick 28s linear infinite;
-    width: max-content;
-    max-width: none;
-  }
-  .marquee span::before {
-    content: "✦ ";
-    color: var(--accent2);
-  }
   .graffiti-list {
     display: flex;
     flex-direction: column;
@@ -531,7 +544,7 @@
   .dot { opacity: .45; }
   @media (prefers-reduced-motion: reduce) {
     button.toy, .coin, .loot-stage { transition: none; animation: none !important; }
-    .ticker, .marquee { animation: none; }
+    .scroll-track { animation: none !important; }
   }
 </style>
 </head>
@@ -626,7 +639,7 @@
           <div class="gauge"><div class="label">型A对称度</div><div class="val" id="g-sym">—</div><div class="bar"><i id="b-sym" style="width:55%"></i></div></div>
         </div>
         <div class="ticker-wrap" aria-hidden="true">
-          <div class="ticker" id="radar-ticker"></div>
+          <div class="scroll-track tick-fast" id="radar-ticker"></div>
         </div>
         <p class="meta">再次强调：玩具 / 非真链 · teny.cc</p>
       </section>
@@ -647,7 +660,7 @@
         <h2 id="wall-title">🧱 访客涂鸦墙</h2>
         <p class="hint">上面滚动的是预设怪话；下面是<strong>本机涂鸦（仅你可见）</strong>，存在浏览器里。可导出/导入 JSON。无后端。</p>
         <div class="marquee-wrap" aria-hidden="true">
-          <div class="marquee" id="wall-marquee"></div>
+          <div class="scroll-track tick-slow" id="wall-marquee"></div>
         </div>
         <div class="g-form">
           <input type="text" id="g-input" maxlength="48" placeholder="留一句怪话（≤48字，仅本机）" autocomplete="off" />
@@ -1024,10 +1037,13 @@
   const radarStatus = document.getElementById("radar-status");
   const radarTicker = document.getElementById("radar-ticker");
 
-  function fillTicker() {
-    const bits = TICKER_BITS.concat(TICKER_BITS);
-    radarTicker.innerHTML = bits.map((b) => "<span>" + esc(b) + "</span>").join("");
+  function fillScrollTrack(el, items) {
+    const group = items.map((b) => "<span>" + esc(b) + "</span>").join("");
+    el.innerHTML =
+      '<div class="scroll-group">' + group + "</div>" +
+      '<div class="scroll-group" aria-hidden="true">' + group + "</div>";
   }
+  function fillTicker() { fillScrollTrack(radarTicker, TICKER_BITS); }
   fillTicker();
 
   function setGauge(id, barId, pct, label) {
@@ -1081,10 +1097,7 @@
   const gErr = document.getElementById("g-err");
   const wallMarquee = document.getElementById("wall-marquee");
 
-  function fillMarquee() {
-    const bits = DEMO_WALL.concat(DEMO_WALL);
-    wallMarquee.innerHTML = bits.map((b) => "<span>" + esc(b) + "</span>").join("");
-  }
+  function fillMarquee() { fillScrollTrack(wallMarquee, DEMO_WALL); }
   fillMarquee();
 
   function loadWall() {
