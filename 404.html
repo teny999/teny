@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a12" />
-<meta name="description" content="teny.cc · Teny 的怪奇实验 — 今日运势、随机骚话、怪奇按钮" />
+<meta name="description" content="teny.cc · Teny 的怪奇实验 — 运势、骚话、诅咒祝福、摸奖、黄人雷达玩具、命运硬币、涂鸦墙" />
 <title>teny.cc · 怪奇实验</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧪%3C/text%3E%3C/svg%3E" />
 <style>
@@ -21,6 +21,8 @@
     --ok: #7dffb3;
     --warn: #ffd27a;
     --bad: #ff7a7a;
+    --rare: #7ec8ff;
+    --ultra: #ffd27a;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -68,6 +70,23 @@
     font-size: .95rem;
     margin: 0;
   }
+  .nav-jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  .nav-jump a {
+    font-size: .72rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: .22rem .55rem;
+    background: rgba(22,22,37,.5);
+  }
+  .nav-jump a:hover { color: var(--accent); border-color: var(--accent); }
   .grid {
     display: grid;
     gap: 1rem;
@@ -91,6 +110,12 @@
     color: var(--muted);
     font-size: .82rem;
   }
+  .row {
+    display: flex;
+    gap: .55rem;
+    flex-wrap: wrap;
+  }
+  .row .toy { flex: 1 1 140px; }
   button.toy {
     appearance: none;
     border: 0;
@@ -107,6 +132,7 @@
   }
   button.toy:hover { filter: brightness(1.06); }
   button.toy:active { transform: translateY(1px) scale(.99); }
+  button.toy:disabled { opacity: .55; cursor: wait; filter: none; }
   button.toy.secondary {
     background: transparent;
     color: var(--text);
@@ -114,6 +140,7 @@
     box-shadow: none;
     margin-top: .55rem;
   }
+  .row button.toy.secondary { margin-top: 0; }
   .result {
     margin-top: .95rem;
     min-height: 3.2rem;
@@ -143,6 +170,331 @@
     font-size: .75rem;
     color: var(--muted);
   }
+
+  /* 诅咒/祝福卡 */
+  .shot-card {
+    margin-top: .95rem;
+    border-radius: 16px;
+    padding: 1.25rem 1.2rem 1.1rem;
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(400px 180px at 90% 0%, rgba(255,122,184,.18), transparent 60%),
+      radial-gradient(300px 160px at 0% 100%, rgba(184,164,255,.15), transparent 55%),
+      var(--bg2);
+    position: relative;
+    overflow: hidden;
+  }
+  .shot-card.bless {
+    background:
+      radial-gradient(400px 180px at 90% 0%, rgba(125,255,179,.16), transparent 60%),
+      radial-gradient(300px 160px at 0% 100%, rgba(184,164,255,.14), transparent 55%),
+      var(--bg2);
+  }
+  .shot-card.curse {
+    background:
+      radial-gradient(400px 180px at 90% 0%, rgba(255,122,122,.18), transparent 60%),
+      radial-gradient(300px 160px at 0% 100%, rgba(255,122,184,.12), transparent 55%),
+      var(--bg2);
+  }
+  .shot-card .tag {
+    display: inline-block;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    padding: .2rem .55rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--accent);
+    margin-bottom: .65rem;
+  }
+  .shot-card.curse .tag { color: var(--bad); border-color: rgba(255,122,122,.4); }
+  .shot-card.bless .tag { color: var(--ok); border-color: rgba(125,255,179,.4); }
+  .shot-card .body {
+    font-size: 1.05rem;
+    font-weight: 650;
+    line-height: 1.5;
+    margin: 0 0 .7rem;
+  }
+  .shot-card .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .72rem;
+    color: var(--muted);
+    border-top: 1px solid rgba(42,42,69,.7);
+    padding-top: .55rem;
+  }
+
+  /* 摸奖 */
+  .loot-stage {
+    margin-top: .95rem;
+    min-height: 5.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .loot-stage.shake { animation: lootshake .45s ease; }
+  @keyframes lootshake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px) rotate(-1deg); }
+    40% { transform: translateX(6px) rotate(1deg); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .loot-card {
+    text-align: center;
+    padding: .9rem 1rem;
+    width: 100%;
+  }
+  .loot-card .rarity {
+    font-size: .72rem;
+    letter-spacing: .1em;
+    font-weight: 700;
+    margin-bottom: .35rem;
+  }
+  .loot-card.common .rarity { color: var(--muted); }
+  .loot-card.rare .rarity { color: var(--rare); }
+  .loot-card.ultra .rarity { color: var(--ultra); text-shadow: 0 0 12px rgba(255,210,122,.35); }
+  .loot-card .sticker {
+    font-size: 2.2rem;
+    line-height: 1;
+    margin: .2rem 0 .35rem;
+  }
+  .loot-card .phrase {
+    font-size: .95rem;
+    font-weight: 650;
+  }
+  .inv {
+    margin-top: .75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+  .inv-item {
+    font-size: .72rem;
+    padding: .28rem .5rem;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: rgba(10,10,18,.5);
+    color: var(--muted);
+  }
+  .inv-item.rare { color: var(--rare); border-color: rgba(126,200,255,.35); }
+  .inv-item.ultra { color: var(--ultra); border-color: rgba(255,210,122,.4); }
+
+  /* 黄人雷达 */
+  .disclaimer {
+    font-size: .75rem;
+    color: var(--warn);
+    background: rgba(255,210,122,.08);
+    border: 1px solid rgba(255,210,122,.25);
+    border-radius: 10px;
+    padding: .55rem .7rem;
+    margin: 0 0 .85rem;
+  }
+  .radar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .65rem;
+    margin-top: .75rem;
+  }
+  @media (max-width: 480px) {
+    .radar-grid { grid-template-columns: 1fr; }
+  }
+  .gauge {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: .75rem .8rem;
+  }
+  .gauge .label {
+    font-size: .72rem;
+    color: var(--muted);
+    margin-bottom: .35rem;
+  }
+  .gauge .val {
+    font-size: 1.15rem;
+    font-weight: 750;
+    color: var(--accent);
+  }
+  .gauge .bar {
+    margin-top: .45rem;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(42,42,69,.9);
+    overflow: hidden;
+  }
+  .gauge .bar > i {
+    display: block;
+    height: 100%;
+    width: 40%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .4s ease;
+  }
+  .ticker-wrap {
+    margin-top: .75rem;
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #0d0d18;
+  }
+  .ticker {
+    display: flex;
+    gap: 2rem;
+    white-space: nowrap;
+    padding: .55rem 0;
+    font-size: .78rem;
+    color: var(--ok);
+    animation: tick 22s linear infinite;
+    width: max-content;
+  }
+  @keyframes tick {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .status-big {
+    margin-top: .75rem;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px dashed var(--line);
+    background: var(--bg2);
+  }
+  .status-big .code {
+    font-size: .72rem;
+    color: var(--muted);
+    letter-spacing: .08em;
+  }
+  .status-big .msg {
+    margin-top: .35rem;
+    font-size: 1.2rem;
+    font-weight: 750;
+    color: var(--accent2);
+  }
+
+  /* 命运硬币 */
+  .coins {
+    display: flex;
+    justify-content: center;
+    gap: .75rem;
+    margin: .95rem 0 .5rem;
+    flex-wrap: wrap;
+  }
+  .coin {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    background: linear-gradient(145deg, #2a2a45, #12121f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--warn);
+    box-shadow: inset 0 0 12px rgba(0,0,0,.35);
+    transition: transform .3s ease;
+  }
+  .coin.flip { animation: coinflip .55s ease; }
+  @keyframes coinflip {
+    0% { transform: rotateY(0) scale(1); }
+    50% { transform: rotateY(180deg) scale(1.08); }
+    100% { transform: rotateY(360deg) scale(1); }
+  }
+  .coin.yang { color: var(--ok); border-color: rgba(125,255,179,.45); }
+  .coin.yin { color: var(--accent); border-color: rgba(184,164,255,.45); }
+
+  /* 涂鸦墙 */
+  .marquee-wrap {
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #0d0d18;
+    margin-bottom: .85rem;
+  }
+  .marquee {
+    display: flex;
+    gap: 2.2rem;
+    white-space: nowrap;
+    padding: .55rem 0;
+    font-size: .78rem;
+    color: var(--muted);
+    animation: tick 28s linear infinite;
+    width: max-content;
+  }
+  .marquee span::before {
+    content: "✦ ";
+    color: var(--accent2);
+  }
+  .graffiti-list {
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    max-height: 220px;
+    overflow-y: auto;
+    margin: .75rem 0;
+    padding-right: .2rem;
+  }
+  .g-note {
+    font-size: .85rem;
+    padding: .55rem .7rem;
+    border-radius: 10px;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+  }
+  .g-note .who {
+    font-size: .68rem;
+    color: var(--muted);
+    margin-bottom: .2rem;
+  }
+  .g-form {
+    display: flex;
+    gap: .45rem;
+  }
+  .g-form input {
+    flex: 1;
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--bg2);
+    color: var(--text);
+    border-radius: 10px;
+    padding: .7rem .8rem;
+    font-size: .9rem;
+    min-width: 0;
+  }
+  .g-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .g-form button {
+    flex: 0 0 auto;
+    width: auto;
+    padding: .7rem 1rem;
+  }
+  .g-tools {
+    display: flex;
+    gap: .45rem;
+    flex-wrap: wrap;
+    margin-top: .55rem;
+  }
+  .g-tools button.toy {
+    width: auto;
+    flex: 1 1 auto;
+    margin-top: 0;
+    padding: .55rem .8rem;
+    font-size: .82rem;
+  }
+  .err {
+    color: var(--bad);
+    font-size: .78rem;
+    margin-top: .4rem;
+    min-height: 1.1em;
+  }
+
   footer {
     margin-top: 2rem;
     text-align: center;
@@ -157,7 +509,8 @@
   footer a:hover { text-decoration: underline; }
   .dot { opacity: .45; }
   @media (prefers-reduced-motion: reduce) {
-    button.toy { transition: none; }
+    button.toy, .coin, .loot-stage { transition: none; animation: none !important; }
+    .ticker, .marquee { animation: none; }
   }
 </style>
 </head>
@@ -167,17 +520,27 @@
       <div class="badge">🧪 LAB · teny.cc</div>
       <h1>怪奇<span>实验</span></h1>
       <p class="sub">点一下，宇宙随便回你一句。Teny 的小型混沌机。</p>
+      <nav class="nav-jump" aria-label="模块导航">
+        <a href="#fortune">运势</a>
+        <a href="#line">骚话</a>
+        <a href="#weird">怪奇</a>
+        <a href="#curse">诅咒/祝福</a>
+        <a href="#loot">摸奖</a>
+        <a href="#radar">黄人雷达</a>
+        <a href="#coins">命运硬币</a>
+        <a href="#wall">涂鸦墙</a>
+      </nav>
     </header>
 
     <div class="grid">
-      <section class="card" aria-labelledby="fortune-title">
+      <section class="card" id="fortune" aria-labelledby="fortune-title">
         <h2 id="fortune-title">✨ 今日运势</h2>
         <p class="hint">按日期种子，同一天结果稳定；换个日子再来。</p>
         <button class="toy" type="button" id="btn-fortune">抽取今日运势</button>
         <div class="result empty" id="out-fortune" role="status">还没抽。胆大一点。</div>
       </section>
 
-      <section class="card" aria-labelledby="line-title">
+      <section class="card" id="line" aria-labelledby="line-title">
         <h2 id="line-title">💬 随机骚话</h2>
         <p class="hint">短、损、有点用。适合发群里当气氛组。</p>
         <button class="toy" type="button" id="btn-line">来一句</button>
@@ -185,11 +548,98 @@
         <div class="result empty" id="out-line" role="status">等你点。</div>
       </section>
 
-      <section class="card" aria-labelledby="weird-title">
+      <section class="card" id="weird" aria-labelledby="weird-title">
         <h2 id="weird-title">🔮 怪奇按钮</h2>
         <p class="hint">不知道会发生什么——这就是卖点。</p>
         <button class="toy" type="button" id="btn-weird">按下去（后果自负）</button>
         <div class="result empty" id="out-weird" role="status">按钮在看着你。</div>
+      </section>
+
+      <section class="card" id="curse" aria-labelledby="curse-title">
+        <h2 id="curse-title">🧿 今日诅咒 / 祝福</h2>
+        <p class="hint">按日种子；同一浏览器同一天结果固定。可截图发群。想换就强制洗牌。</p>
+        <div class="row">
+          <button class="toy" type="button" id="btn-curse">抽取今日签</button>
+          <button class="toy secondary" type="button" id="btn-curse-reshuffle">强制洗牌</button>
+        </div>
+        <div class="shot-card" id="out-curse" hidden>
+          <div class="tag" id="curse-tag">—</div>
+          <p class="body" id="curse-body">—</p>
+          <div class="foot">
+            <span>teny.cc · 怪奇实验</span>
+            <span id="curse-date">—</span>
+          </div>
+        </div>
+        <div class="result empty" id="curse-placeholder" role="status">还没抽签。命运在排队。</div>
+      </section>
+
+      <section class="card" id="loot" aria-labelledby="loot-title">
+        <h2 id="loot-title">🎁 摸奖箱</h2>
+        <p class="hint">抽贴纸 / 骚话卡。稀有度：普通 · 稀有 · 超稀有。背包存在本机。</p>
+        <button class="toy" type="button" id="btn-loot">开箱！</button>
+        <div class="loot-stage" id="loot-stage">
+          <div class="loot-card common" id="loot-card">
+            <div class="rarity">等待开箱</div>
+            <div class="sticker">📦</div>
+            <div class="phrase">手别抖</div>
+          </div>
+        </div>
+        <p class="meta" style="margin-top:.65rem">本机背包（localStorage）</p>
+        <div class="inv" id="loot-inv" aria-live="polite"></div>
+        <button class="toy secondary" type="button" id="btn-loot-clear">清空背包</button>
+      </section>
+
+      <section class="card" id="radar" aria-labelledby="radar-title">
+        <h2 id="radar-title">📡 黄人雷达 · 玩具</h2>
+        <p class="disclaimer">⚠️ 纯娱乐假仪表盘 · <strong>非真链上监控</strong> · 数据全是随机梗，别当真、别拿去交易。</p>
+        <p class="hint">点刷新，看一屏离谱状态。</p>
+        <button class="toy" type="button" id="btn-radar">扫描一遍（假的）</button>
+        <div class="status-big" id="radar-status">
+          <div class="code">SCAN · IDLE</div>
+          <div class="msg">雷达在打哈欠</div>
+        </div>
+        <div class="radar-grid">
+          <div class="gauge"><div class="label">蹭仓指数</div><div class="val" id="g-snipe">—</div><div class="bar"><i id="b-snipe" style="width:30%"></i></div></div>
+          <div class="gauge"><div class="label">喂仓置信</div><div class="val" id="g-feed">—</div><div class="bar"><i id="b-feed" style="width:40%"></i></div></div>
+          <div class="gauge"><div class="label">磨盘热度</div><div class="val" id="g-grind">—</div><div class="bar"><i id="b-grind" style="width:25%"></i></div></div>
+          <div class="gauge"><div class="label">型A对称度</div><div class="val" id="g-sym">—</div><div class="bar"><i id="b-sym" style="width:55%"></i></div></div>
+        </div>
+        <div class="ticker-wrap" aria-hidden="true">
+          <div class="ticker" id="radar-ticker"></div>
+        </div>
+        <p class="meta">再次强调：玩具 / 非真链 · teny.cc</p>
+      </section>
+
+      <section class="card" id="coins" aria-labelledby="coins-title">
+        <h2 id="coins-title">🪙 命运硬币</h2>
+        <p class="hint">连抛三枚，拼成一句离谱预言。阳=正面，阴=反面。</p>
+        <button class="toy" type="button" id="btn-coins">抛三次</button>
+        <div class="coins" id="coin-row" aria-hidden="true">
+          <div class="coin" id="coin-0">?</div>
+          <div class="coin" id="coin-1">?</div>
+          <div class="coin" id="coin-2">?</div>
+        </div>
+        <div class="result empty" id="out-coins" role="status">硬币在口袋里沉思。</div>
+      </section>
+
+      <section class="card" id="wall" aria-labelledby="wall-title">
+        <h2 id="wall-title">🧱 访客涂鸦墙</h2>
+        <p class="hint">上面滚动的是预设怪话；下面是<strong>本机涂鸦（仅你可见）</strong>，存在浏览器里。可导出/导入 JSON。无后端。</p>
+        <div class="marquee-wrap" aria-hidden="true">
+          <div class="marquee" id="wall-marquee"></div>
+        </div>
+        <div class="g-form">
+          <input type="text" id="g-input" maxlength="48" placeholder="留一句怪话（≤48字，仅本机）" autocomplete="off" />
+          <button class="toy" type="button" id="btn-graffiti">贴上</button>
+        </div>
+        <div class="err" id="g-err"></div>
+        <div class="graffiti-list" id="g-list" aria-live="polite"></div>
+        <div class="g-tools">
+          <button class="toy secondary" type="button" id="btn-g-export">导出本机涂鸦</button>
+          <button class="toy secondary" type="button" id="btn-g-import">导入 JSON</button>
+          <button class="toy secondary" type="button" id="btn-g-clear">清空本机</button>
+        </div>
+        <input type="file" id="g-file" accept="application/json,.json" hidden />
       </section>
     </div>
 
@@ -260,6 +710,104 @@
     { t: "系统提示", d: "你已解锁隐藏结局：普通且快乐。稀有度：SSR。" }
   ];
 
+  const BLESSINGS = [
+    "愿你今天的每一个「算了」都变成「刚好」。",
+    "隐形贵人已上线，但不加你好友，只默默帮你挡雷。",
+    "你说出口的那句狠话，会被翻译成好运。",
+    "钱包情绪稳定，心情偶尔暴涨。",
+    "路灯会替你亮一盏，电梯会替你等一门。",
+    "今天适合被偶然的好事撞一下。别躲。",
+    "你错过的班车，会把麻烦一并带走。",
+    "群聊安静是福，你的灵感很吵是吉。",
+    "你获得短暂读心术：只能读出「该睡觉了」。",
+    "宇宙给你盖章：今日可大胆一点，但别离谱过头。"
+  ];
+
+  const CURSES = [
+    "愿你今天点错三次，但每次都歪打正着。",
+    "耳机线打结诅咒：轻微版，只影响你急着出门那五秒。",
+    "你将遭遇「明明记得却说不出口」的词——大约三个。",
+    "自动纠正会把你的认真打成玩笑。接受它。",
+    "通知角标 +1，点开却是空气。反复三次。",
+    "你想低调，但今天的袜子配色太有存在感。",
+    "咖啡会微凉，刚好提醒你：慢一点。",
+    "你打开的第一个链接会转圈。深呼吸，它只是在考验耐心。",
+    "轻微迷路 Buff：你会找到更好的店。",
+    "今天的你会被自己之前立的 flag 轻轻绊一下。"
+  ];
+
+  const LOOT = [
+    { r: "common", e: "🐸", p: "青蛙盯盘中" },
+    { r: "common", e: "🫠", p: "融化但不撤" },
+    { r: "common", e: "📦", p: "空气盒" },
+    { r: "common", e: "🪙", p: "命运硬币贴纸" },
+    { r: "common", e: "😴", p: "长期主义休眠" },
+    { r: "common", e: "🧃", p: "情绪电解质" },
+    { r: "common", e: "📎", p: "无关紧要的回形针" },
+    { r: "common", e: "🧿", p: "小诅咒防御符" },
+    { r: "rare", e: "👁️", p: "黄人雷达贴纸（玩具）" },
+    { r: "rare", e: "🧪", p: "怪奇实验合格证" },
+    { r: "rare", e: "📡", p: "疑似喂仓警报牌" },
+    { r: "rare", e: "🪞", p: "平行宇宙备用脸" },
+    { r: "rare", e: "🎟️", p: "免 FOMO 一日券" },
+    { r: "ultra", e: "👑", p: "SSR·低调发财帽" },
+    { r: "ultra", e: "🌌", p: "宇宙握手券（不可用）" },
+    { r: "ultra", e: "🖤", p: "Teny 黑胶认证" },
+    { r: "ultra", e: "🦄", p: "磨盘克星独角兽" }
+  ];
+
+  const RADAR_STATUSES = [
+    { code: "ALERT · SNIPE", msg: "蹭仓警报" },
+    { code: "SUS · FEED", msg: "疑似喂仓" },
+    { code: "GRIND · HOT", msg: "磨盘中" },
+    { code: "TYPE · A", msg: "型A对称灌" },
+    { code: "TYPE · B", msg: "型B只灌主" },
+    { code: "DEV · YEET", msg: "开盘方直塞" },
+    { code: "DUST · PING", msg: "同前缀粉尘" },
+    { code: "IDLE · NAP", msg: "庄家在睡觉（也许）" },
+    { code: "FOMO · SPIKE", msg: "群情激动指数超标" },
+    { code: "FAKE · 100", msg: "本条纯属娱乐" }
+  ];
+
+  const TICKER_BITS = [
+    "假MC抖动 ±3.14%",
+    "玩具地址 2heJ…DogF 状态：摆pose",
+    "未接 KuCoin/Gate/Duel（因为根本没接）",
+    "置信度由骰子决定",
+    "disclaimer: 非真链",
+    "型A / 型B 今日随机放送",
+    "喂仓形态：空气盒",
+    "扫描完成 · 什么都没发生"
+  ];
+
+  const PROPHECY = {
+    "YYY": "三阳开泰：你会在错误的时间点对的地方——总之先喝水。",
+    "YYN": "两阳一阴：好运在路上堵车，你的耐心是通行证。",
+    "YNY": "阳阴阳：先扬后抑再扬。适合短线情绪，不适合人生决策。",
+    "YNN": "一阳两阴：低调日。少立 flag，多收拾桌面。",
+    "NYY": "一阴两阳：从犹豫开始，以离谱结束。记得截图。",
+    "NYN": "阴阳阴：三明治命运。中间那层才是馅，别只吃边。",
+    "NNY": "两阴一阳：黎明前的磨盘。撑住，笑话会来。",
+    "NNN": "三阴：宇宙建议关机充电。预言本身也请假了。"
+  };
+
+  const DEMO_WALL = [
+    "本墙预设怪话，不是真人留言。",
+    "黄人雷达是玩具，别拿去当信号。",
+    "今日诅咒已送达，请签收好运。",
+    "摸奖出 SSR 的人请保持沉默并炫耀。",
+    "命运硬币说：再抛一次也行。",
+    "teny.cc 在线，宇宙偶尔掉线。",
+    "磨盘中…请插入硬币继续游戏。",
+    "疑似喂仓，实则空气。"
+  ];
+
+  const SPAM = ["免费领", "加微信", "加vx", "色情", "赌博平台", "点击下载木马", "http://", "https://", "www."];
+
+  const INV_KEY = "teny_loot_inv_v1";
+  const WALL_KEY = "teny_wall_local_v1";
+  const CURSE_FORCE_KEY = "teny_curse_force_v1";
+
   function mulberry32(a) {
     return function () {
       let t = (a += 0x6d2b79f5);
@@ -271,10 +819,13 @@
 
   function daySeed() {
     const d = new Date();
-    const y = d.getFullYear();
-    const m = d.getMonth() + 1;
-    const day = d.getDate();
-    return y * 10000 + m * 100 + day;
+    return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  }
+
+  function todayLabel() {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, "0");
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
   }
 
   function stars(n) {
@@ -285,6 +836,15 @@
     return arr[Math.floor(rnd() * arr.length)];
   }
 
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // —— 原有三件 ——
   const outFortune = document.getElementById("out-fortune");
   const outLine = document.getElementById("out-line");
   const outWeird = document.getElementById("out-weird");
@@ -292,16 +852,16 @@
   let lastLine = "";
 
   document.getElementById("btn-fortune").addEventListener("click", () => {
-    const rnd = mulberry32(daySeed() ^ 0x54454e59); // TENY
+    const rnd = mulberry32(daySeed() ^ 0x54454e59);
     const f = pick(FORTUNES, rnd);
     const lucky = ["紫", "青", "银", "墨", "霓虹粉", "幽灵白"][Math.floor(rnd() * 6)];
     const num = 1 + Math.floor(rnd() * 88);
     outFortune.classList.remove("empty");
     outFortune.innerHTML =
-      '<span class="title">' + f.t + "</span>" +
+      '<span class="title">' + esc(f.t) + "</span>" +
       '<div class="stars" aria-label="星级">' + stars(f.s) + "</div>" +
-      f.d +
-      '<div class="meta">幸运色 · ' + lucky + "　·　今日数字 · " + num + "</div>";
+      esc(f.d) +
+      '<div class="meta">幸运色 · ' + esc(lucky) + "　·　今日数字 · " + num + "</div>";
   });
 
   document.getElementById("btn-line").addEventListener("click", () => {
@@ -328,7 +888,269 @@
     const rnd = mulberry32((performance.now() * 1000 ^ Date.now()) >>> 0);
     const w = pick(WEIRD, rnd);
     outWeird.classList.remove("empty");
-    outWeird.innerHTML = '<span class="title">' + w.t + "</span>" + w.d;
+    outWeird.innerHTML = '<span class="title">' + esc(w.t) + "</span>" + esc(w.d);
+  });
+
+  // —— 今日诅咒/祝福 ——
+  const outCurse = document.getElementById("out-curse");
+  const cursePlaceholder = document.getElementById("curse-placeholder");
+  const curseTag = document.getElementById("curse-tag");
+  const curseBody = document.getElementById("curse-body");
+  const curseDate = document.getElementById("curse-date");
+
+  function renderCurse(forceSalt) {
+    let seed = daySeed() ^ 0xc0ffee;
+    if (forceSalt != null) seed = (seed ^ (forceSalt >>> 0)) >>> 0;
+    const rnd = mulberry32(seed);
+    const isBless = rnd() > 0.45;
+    const text = isBless ? pick(BLESSINGS, rnd) : pick(CURSES, rnd);
+    outCurse.hidden = false;
+    outCurse.classList.toggle("bless", isBless);
+    outCurse.classList.toggle("curse", !isBless);
+    curseTag.textContent = isBless ? "✦ 今日祝福" : "☠ 今日诅咒";
+    curseBody.textContent = text;
+    curseDate.textContent = todayLabel() + (forceSalt != null ? " · 洗牌" : "");
+    cursePlaceholder.hidden = true;
+  }
+
+  document.getElementById("btn-curse").addEventListener("click", () => {
+    let force = null;
+    try {
+      const raw = localStorage.getItem(CURSE_FORCE_KEY);
+      if (raw) {
+        const o = JSON.parse(raw);
+        if (o && o.day === daySeed()) force = o.salt;
+      }
+    } catch (_) {}
+    renderCurse(force);
+  });
+
+  document.getElementById("btn-curse-reshuffle").addEventListener("click", () => {
+    const salt = (Date.now() ^ (Math.random() * 1e9)) >>> 0;
+    try {
+      localStorage.setItem(CURSE_FORCE_KEY, JSON.stringify({ day: daySeed(), salt: salt }));
+    } catch (_) {}
+    renderCurse(salt);
+  });
+
+  // —— 摸奖箱 ——
+  const lootStage = document.getElementById("loot-stage");
+  const lootCard = document.getElementById("loot-card");
+  const lootInv = document.getElementById("loot-inv");
+  const btnLoot = document.getElementById("btn-loot");
+
+  function loadInv() {
+    try {
+      const raw = localStorage.getItem(INV_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (_) { return []; }
+  }
+  function saveInv(arr) {
+    try { localStorage.setItem(INV_KEY, JSON.stringify(arr.slice(0, 40))); } catch (_) {}
+  }
+  function rarityLabel(r) {
+    return r === "ultra" ? "超稀有 ULTRA" : r === "rare" ? "稀有 RARE" : "普通 COMMON";
+  }
+  function drawLootItem(rnd) {
+    const roll = rnd();
+    let pool;
+    if (roll < 0.08) pool = LOOT.filter((x) => x.r === "ultra");
+    else if (roll < 0.30) pool = LOOT.filter((x) => x.r === "rare");
+    else pool = LOOT.filter((x) => x.r === "common");
+    return pick(pool, rnd);
+  }
+  function renderInv() {
+    const inv = loadInv();
+    if (!inv.length) {
+      lootInv.innerHTML = '<span class="inv-item">空空如也</span>';
+      return;
+    }
+    lootInv.innerHTML = inv.map((it) =>
+      '<span class="inv-item ' + esc(it.r) + '">' + esc(it.e) + " " + esc(it.p) + "</span>"
+    ).join("");
+  }
+  renderInv();
+
+  btnLoot.addEventListener("click", () => {
+    btnLoot.disabled = true;
+    lootStage.classList.remove("shake");
+    void lootStage.offsetWidth;
+    lootStage.classList.add("shake");
+    lootCard.className = "loot-card common";
+    lootCard.innerHTML = '<div class="rarity">开启中…</div><div class="sticker">✨</div><div class="phrase">……</div>';
+    setTimeout(() => {
+      const rnd = mulberry32((Date.now() ^ (Math.random() * 1e9)) >>> 0);
+      const item = drawLootItem(rnd);
+      lootCard.className = "loot-card " + item.r;
+      lootCard.innerHTML =
+        '<div class="rarity">' + rarityLabel(item.r) + "</div>" +
+        '<div class="sticker">' + esc(item.e) + "</div>" +
+        '<div class="phrase">' + esc(item.p) + "</div>";
+      const inv = loadInv();
+      inv.unshift({ e: item.e, p: item.p, r: item.r, t: Date.now() });
+      saveInv(inv);
+      renderInv();
+      btnLoot.disabled = false;
+    }, 480);
+  });
+
+  document.getElementById("btn-loot-clear").addEventListener("click", () => {
+    saveInv([]);
+    renderInv();
+  });
+
+  // —— 黄人雷达玩具 ——
+  const radarStatus = document.getElementById("radar-status");
+  const radarTicker = document.getElementById("radar-ticker");
+
+  function fillTicker() {
+    const bits = TICKER_BITS.concat(TICKER_BITS);
+    radarTicker.innerHTML = bits.map((b) => "<span>" + esc(b) + "</span>").join("");
+  }
+  fillTicker();
+
+  function setGauge(id, barId, pct, label) {
+    document.getElementById(id).textContent = label;
+    document.getElementById(barId).style.width = Math.max(6, Math.min(100, pct)) + "%";
+  }
+
+  document.getElementById("btn-radar").addEventListener("click", () => {
+    const rnd = mulberry32((Date.now() ^ (Math.random() * 1e9)) >>> 0);
+    const st = pick(RADAR_STATUSES, rnd);
+    radarStatus.innerHTML =
+      '<div class="code">' + esc(st.code) + "</div>" +
+      '<div class="msg">' + esc(st.msg) + "</div>";
+    const a = Math.floor(rnd() * 100);
+    const b = Math.floor(rnd() * 100);
+    const c = Math.floor(rnd() * 100);
+    const d = Math.floor(rnd() * 100);
+    setGauge("g-snipe", "b-snipe", a, a + "% · 假");
+    setGauge("g-feed", "b-feed", b, b + "% · 骰子");
+    setGauge("g-grind", "b-grind", c, c + "°C · 玩具");
+    setGauge("g-sym", "b-sym", d, d + "% · 摆pose");
+  });
+
+  // —— 命运硬币 ——
+  const outCoins = document.getElementById("out-coins");
+
+  document.getElementById("btn-coins").addEventListener("click", () => {
+    const rnd = mulberry32((Date.now() ^ (Math.random() * 1e9)) >>> 0);
+    const results = [];
+    for (let i = 0; i < 3; i++) {
+      const yang = rnd() > 0.5;
+      results.push(yang ? "Y" : "N");
+      const el = document.getElementById("coin-" + i);
+      el.classList.remove("flip", "yang", "yin");
+      void el.offsetWidth;
+      el.classList.add("flip");
+      el.textContent = yang ? "阳" : "阴";
+      el.classList.add(yang ? "yang" : "yin");
+    }
+    const key = results.join("");
+    const faces = results.map((r) => (r === "Y" ? "阳" : "阴")).join(" · ");
+    outCoins.classList.remove("empty");
+    outCoins.innerHTML =
+      '<span class="title">卦象 · ' + faces + "</span>" +
+      esc(PROPHECY[key] || "预言加载失败，但你还活着。");
+  });
+
+  // —— 涂鸦墙 ——
+  const gList = document.getElementById("g-list");
+  const gInput = document.getElementById("g-input");
+  const gErr = document.getElementById("g-err");
+  const wallMarquee = document.getElementById("wall-marquee");
+
+  function fillMarquee() {
+    const bits = DEMO_WALL.concat(DEMO_WALL);
+    wallMarquee.innerHTML = bits.map((b) => "<span>" + esc(b) + "</span>").join("");
+  }
+  fillMarquee();
+
+  function loadWall() {
+    try {
+      const raw = localStorage.getItem(WALL_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (_) { return []; }
+  }
+  function saveWall(arr) {
+    try { localStorage.setItem(WALL_KEY, JSON.stringify(arr.slice(0, 80))); } catch (_) {}
+  }
+  function renderWall() {
+    const notes = loadWall();
+    if (!notes.length) {
+      gList.innerHTML = '<div class="g-note"><div class="who">本机涂鸦 · 仅你可见</div>还没有。写一句怪话吧。</div>';
+      return;
+    }
+    gList.innerHTML = notes.map((n) =>
+      '<div class="g-note"><div class="who">本机 · ' + esc(n.at || "") +
+      '</div>' + esc(n.text) + "</div>"
+    ).join("");
+  }
+  renderWall();
+
+  function softBlock(text) {
+    const t = text.toLowerCase();
+    return SPAM.some((w) => t.indexOf(w.toLowerCase()) !== -1);
+  }
+
+  document.getElementById("btn-graffiti").addEventListener("click", () => {
+    gErr.textContent = "";
+    const text = (gInput.value || "").trim();
+    if (!text) { gErr.textContent = "写点什么再贴。"; return; }
+    if (text.length > 48) { gErr.textContent = "太长了，≤48 字。"; return; }
+    if (softBlock(text)) { gErr.textContent = "这句被软过滤拦下了。换一句怪的。"; return; }
+    const notes = loadWall();
+    notes.unshift({ text: text, at: todayLabel() });
+    saveWall(notes);
+    gInput.value = "";
+    renderWall();
+  });
+
+  gInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("btn-graffiti").click();
+  });
+
+  document.getElementById("btn-g-export").addEventListener("click", () => {
+    const data = JSON.stringify({ v: 1, notes: loadWall() }, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "teny-wall-" + todayLabel() + ".json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  document.getElementById("btn-g-import").addEventListener("click", () => {
+    document.getElementById("g-file").click();
+  });
+
+  document.getElementById("g-file").addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const o = JSON.parse(String(reader.result || "{}"));
+        const notes = Array.isArray(o) ? o : (o.notes || []);
+        const cleaned = notes
+          .filter((n) => n && typeof n.text === "string")
+          .map((n) => ({ text: String(n.text).slice(0, 48), at: n.at || todayLabel() }))
+          .filter((n) => n.text && !softBlock(n.text));
+        saveWall(cleaned.concat(loadWall()));
+        renderWall();
+        gErr.textContent = "已导入 " + cleaned.length + " 条。";
+      } catch (_) {
+        gErr.textContent = "JSON 读不懂。";
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById("btn-g-clear").addEventListener("click", () => {
+    saveWall([]);
+    renderWall();
+    gErr.textContent = "";
   });
 })();
 </script>
